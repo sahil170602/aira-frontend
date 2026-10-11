@@ -12,13 +12,20 @@ function Home({
   onOpenSettings,
 }) {
   const [isListening] = useState(true);
-  const [isSpeaking, setIsSpeaking] =
-    useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  // Use the name selected by the current user.
+  const displayName =
+    typeof assistantName === "string" &&
+    assistantName.trim().length > 0
+      ? assistantName.trim()
+      : "Aira";
 
   /*
    * Temporary speaking animation.
    *
-   * Later the real voice engine will control this.
+   * This animation is visual only. Connect it to the
+   * actual voice engine when speech playback is implemented.
    */
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -28,6 +35,7 @@ function Home({
         setIsSpeaking(false);
       }, 2200);
 
+      // Clean up the inner timer.
       return () => clearTimeout(stopTimer);
     }, 1500);
 
@@ -36,7 +44,6 @@ function Home({
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black text-white">
-
       {/* Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-[42%] h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/[0.04] blur-[120px]" />
@@ -46,27 +53,23 @@ function Home({
         <div className="absolute bottom-[15%] right-[5%] h-[250px] w-[250px] rounded-full bg-fuchsia-600/[0.025] blur-[100px]" />
       </div>
 
-      {/* Shared Header */}
+      {/* Header */}
       <AiraHeader
-        assistantName={assistantName}
-        status={
-          isListening
-            ? "Listening"
-            : "Offline"
-        }
+        assistantName={displayName}
+        status={isListening ? "Listening" : "Offline"}
         onSettings={onOpenSettings}
       />
 
       {/* Main */}
       <main className="relative z-10 flex min-h-[calc(100vh-150px)] flex-col items-center justify-center px-6 pb-28">
-
+        {/* Greeting and status */}
         <div className="mb-8 text-center">
           <p className="text-sm text-white/30">
             {isSpeaking
-              ? `${assistantName} is speaking`
+              ? `${displayName} is speaking`
               : isListening
-                ? "I'm listening..."
-                : "Ready when you are"}
+                ? `${displayName} is listening...`
+                : `${displayName} is ready when you are`}
           </p>
         </div>
 
@@ -79,7 +82,7 @@ function Home({
           }`}
         >
           <div className="relative flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
-
+            {/* Orb glow */}
             <div
               className={`absolute inset-0 rounded-full transition-all duration-700 ${
                 isSpeaking
@@ -88,26 +91,31 @@ function Home({
               }`}
             />
 
+            {/* Aira orb */}
             <img
               src={orb}
-              alt={assistantName}
+              alt={`${displayName} assistant orb`}
               className="relative h-56 w-56 object-contain sm:h-64 sm:w-64"
             />
           </div>
         </div>
 
-        {/* Always Listening */}
+        {/* Listening indicator */}
         <div className="mt-10 flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-5 py-2.5 backdrop-blur-xl">
-
           <div className="flex items-center gap-1">
             <span className="aira-mic-wave h-3 w-0.5 rounded-full" />
+
             <span className="aira-mic-wave h-5 w-0.5 rounded-full [animation-delay:120ms]" />
+
             <span className="aira-mic-wave h-4 w-0.5 rounded-full [animation-delay:240ms]" />
+
             <span className="aira-mic-wave h-2.5 w-0.5 rounded-full [animation-delay:360ms]" />
           </div>
 
           <span className="text-xs text-white/40">
-            Always listening
+            {isListening
+              ? `${displayName} is ready`
+              : "Listening paused"}
           </span>
 
           <Mic
@@ -117,7 +125,7 @@ function Home({
         </div>
       </main>
 
-      {/* Shared Bottom Navigation */}
+      {/* Bottom Navigation */}
       <BottomNav
         currentPage="home"
         onNavigate={onNavigate}

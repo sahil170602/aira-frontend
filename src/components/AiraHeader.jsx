@@ -22,12 +22,13 @@ function AiraHeader({
         </div>
       </div>
 
-      {/* Right */}
+      {/* Settings */}
       <button
         type="button"
         onClick={onSettings}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/50 transition hover:bg-white/10 hover:text-white"
-        aria-label="Settings"
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/50 transition hover:bg-white/10 hover:text-white active:scale-95"
+        aria-label="Open Aira settings"
+        title="Aira Settings"
       >
         <Settings size={18} />
       </button>

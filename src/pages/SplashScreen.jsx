@@ -34,7 +34,7 @@ function SplashScreen({ onComplete }) {
 
         {/* Aira name */}
         <h1 className="aira-splash-title mt-6 text-center text-5xl font-semibold tracking-tight">
-          Aira
+          
         </h1>
 
         {/* Subtitle */}
